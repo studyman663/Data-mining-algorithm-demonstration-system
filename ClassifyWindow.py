@@ -1,11 +1,14 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, QTabWidget, QMessageBox
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QFont
 from PyQt6.QtCore import Qt
 from matplotlib import pyplot as plt
 from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
 
 from classifyModel import myDecisionTree, myBayes
+
 plt.rcParams['font.sans-serif'] = ['SimHei']
+
 
 class ClassifyWindow(QWidget):
     def __init__(self, main_window):
@@ -17,14 +20,15 @@ class ClassifyWindow(QWidget):
         self.setLayout(vbox)
 
     def init_UI(self):
-        self.data=None
-        self.label=None
-        self.mode = '模式数据'
+        self.data = '数据集'
+        self.label = None
+        self.data_train, self.data_test, self.label_train, self.label_test = None, None, None, None
+        self.mode = '内置数据集'
         self.num = 300
         self.feature = 2
         self.classes = 2
-        self.noise=0.1
-        mode = ['数据集生成方法', "模式数据", "随机数据"]
+        self.noise = 0.1
+        mode = ['数据集生成方法', "内置数据集", "自定义数据集"]
         num = ['样本总数', '100', '500', '1000']
         feature = ['样本特征数', '1', '2', '3', '4', '5']
         classes = ['样本类别数', '1', '2', '3', '4', '5']
@@ -42,10 +46,10 @@ class ClassifyWindow(QWidget):
         show_button = QPushButton('生成数据')
 
         tab_widget = QTabWidget()
-        self.source_data = QLabel()
+        self.source_data = QLabel(self.data)
         self.source_data.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("myplot.png")  # 替换为你的图片路径
-        self.source_data.setPixmap(self.pixmap)
+        self.font = QFont("Arial", 40)
+        self.source_data.setFont(self.font)
         self.decision_tree = ClassifyTabWidget()
         self.bayes = ClassifyTabWidget()
         self.bayes.depth_combbox.setVisible(False)
@@ -55,7 +59,6 @@ class ClassifyWindow(QWidget):
         tab_widget.addTab(self.source_data, '原始数据')
         tab_widget.addTab(self.decision_tree, '决策树')
         tab_widget.addTab(self.bayes, '贝叶斯')
-
 
         # 使用水平布局管理器布局lab_acc控件和account控件，左右留白10像素
         hbox_func = QHBoxLayout()  # 水平布局管理器
@@ -120,29 +123,45 @@ class ClassifyWindow(QWidget):
 
     def dataCreate(self):
         data, label = None, None
-        if self.mode == '模式数据':
-            data, label =make_classification(n_samples=self.num,
-                        n_features=self.feature,
-                        n_informative=2,
-                        n_redundant=0,
-                        n_repeated=0,
-                        n_classes=self.classes,
-                        random_state=42,
-                        n_clusters_per_class=2,
-                        shuffle=True,
-                        class_sep=1,
-                        shift=10,
-                        scale=3,
-                        flip_y=self.noise)
+        if self.mode == '自定义数据集':
+            data, label = make_classification(n_samples=self.num,
+                                              n_features=self.feature,
+                                              n_informative=2,
+                                              n_redundant=0,
+                                              n_repeated=0,
+                                              n_classes=self.classes,
+                                              random_state=None,
+                                              n_clusters_per_class=2,
+                                              shuffle=True,
+                                              class_sep=1,
+                                              shift=10,
+                                              scale=3,
+                                              flip_y=self.noise)
         else:
-            pass
+            data, label = make_classification(n_samples=300,
+                                              n_features=2,
+                                              n_informative=2,
+                                              n_redundant=0,
+                                              n_repeated=0,
+                                              n_classes=2,
+                                              random_state=42,
+                                              n_clusters_per_class=2,
+                                              shuffle=True,
+                                              class_sep=1,
+                                              shift=10,
+                                              scale=3,
+                                              flip_y=0)
         return data, label
 
     def showData(self):
         self.data, self.label = self.dataCreate()
+        self.data_train, self.data_test, self.label_train, self.label_test = train_test_split(self.data, self.label,
+                                                                                              test_size=1 / 2,
+                                                                                              random_state=42)
         img_path = 'result/classify.png'
-        plt.scatter(self.data[:, 0], self.data[:, 1],c=self.label, cmap='cool')
+        plt.scatter(self.data[:, 0], self.data[:, 1], c=self.label, cmap='cool')
         plt.savefig(img_path)
+        plt.close()
         pixmap = QPixmap(img_path)
         self.source_data.setPixmap(pixmap)
         self.decision_tree.image_label.setPixmap(pixmap)
@@ -150,11 +169,11 @@ class ClassifyWindow(QWidget):
 
     def runDtree(self):
         model = myDecisionTree(max_depth=self.decision_tree.depth)
-        model.fit(self.data,self.label)
-        pred=model.predict(self.data)
-        plt.scatter(self.data[:, 0], self.data[:, 1], c=pred, cmap='bwr')
-        plt.xlabel('Feature 1')
-        plt.ylabel('Feature 2')
+        model.fit(self.data_train, self.label_train)
+        pred = model.predict(self.data_test)
+        plt.scatter(self.data_test[:, 0], self.data_test[:, 1], c=pred, cmap='bwr')
+        plt.xlabel('特征1')
+        plt.ylabel('特征2')
         img_path = 'result/decision_tree.png'
         plt.savefig(img_path)
         plt.close()
@@ -163,20 +182,20 @@ class ClassifyWindow(QWidget):
 
     def runBayes(self):
         model = myBayes()
-        model.fit(self.data, self.label)
-        pred = model.predict(self.data)
-        plt.scatter(self.data[:, 0], self.data[:, 1], c=pred, cmap='bwr')
-        plt.xlabel('Feature 1')
-        plt.ylabel('Feature 2')
+        model.fit(self.data_train, self.label_train)
+        pred = model.predict(self.data_test)
+        plt.scatter(self.data_test[:, 0], self.data_test[:, 1], c=pred, cmap='bwr')
+        plt.xlabel('特征1')
+        plt.ylabel('特征2')
         img_path = 'result/bayes.png'
         plt.savefig(img_path)
         plt.close()
         pixmap = QPixmap(img_path)
         self.bayes.image_label.setPixmap(pixmap)
 
-
     def closeEvent(self, evt):
         self.main_window.show()
+
 
 class ClassifyTabWidget(QWidget):
     def __init__(self):

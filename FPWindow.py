@@ -1,7 +1,8 @@
 import random
 
-from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, QTabWidget, QMessageBox
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, QTabWidget, QMessageBox, \
+    QTextEdit
+from PyQt6.QtGui import QPixmap, QFont
 from PyQt6.QtCore import Qt
 from matplotlib import pyplot as plt
 from sklearn.datasets import make_classification
@@ -19,13 +20,13 @@ class FPWindow(QWidget):
         self.setLayout(vbox)
 
     def init_UI(self):
-        self.data = None
-        self.mode = '模式数据'
+        self.data = '数据集'
+        self.mode = '内置数据集'
         self.num = 10
         self.classes = 5
-        mode = ['数据集生成方法', "模式数据", "随机数据"]
+        mode = ['数据集生成方法', "内置数据集", "自定义数据集"]
         num = ['事务总数', '5', '10','15','20','30']
-        classes = ['商品类别数', '3', '4', '5','6','7']
+        classes = ['商品类别数', '4', '5','6','7','8','9']
         mode_combbox = QComboBox(self)
         mode_combbox.addItems(mode)
         num_combbox = QComboBox(self)
@@ -35,10 +36,10 @@ class FPWindow(QWidget):
         show_button = QPushButton('生成数据')
 
         tab_widget = QTabWidget()
-        self.source_data = QLabel()
+        self.source_data = QTextEdit(self.data)
         self.source_data.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("myplot.png")  # 替换为你的图片路径
-        self.source_data.setPixmap(self.pixmap)
+        self.font = QFont("Arial", 30)
+        self.source_data.setFont(self.font)
         self.apriori = FPTabWidget()
         self.fpgrowth = FPTabWidget()
         # self.bayes.depth_combbox.setVisible(False)
@@ -95,7 +96,7 @@ class FPWindow(QWidget):
             self.classes = int(classes)
 
     def dataCreate(self):
-        if self.mode == '随机数据':
+        if self.mode == '自定义数据集':
             # 随机生成商品种类名
             categories = [f'商品{i}' for i in range(1, self.classes + 1)]
             dataset = []
@@ -112,22 +113,26 @@ class FPWindow(QWidget):
             return dataset
         else:
             return [
-                ['A', 'B', 'C', 'E', 'F', 'O'],
-                ['A', 'C', 'G'],
-                ['E', 'I'],
-                ['A', 'C', 'D', 'E', 'G'],
-                ['A', 'C', 'E', 'G', 'L'],
-                ['E', 'J'],
-                ['A', 'B', 'C', 'E', 'F', 'P'],
-                ['A', 'C', 'D'],
-                ['A', 'C', 'E', 'G', 'M'],
-                ['A', 'C', 'E', 'G', 'N'],
-                ['A', 'C', 'B'],
-                ['A', 'B', 'D']]
+                ['商品5', '商品6', '商品1', '商品7'],
+                ['商品5', '商品3', '商品1', '商品6', '商品4'],
+                ['商品2', '商品5'],
+                ['商品3', '商品4', '商品7', '商品5', '商品8', '商品2', '商品6'],
+                ['商品1', '商品3'],
+                ['商品5', '商品3', '商品7', '商品2'],
+                ['商品2', '商品4', '商品6'],
+                ['商品4', '商品7', '商品5', '商品2', '商品8', '商品3', '商品6', '商品1'],
+                ['商品2', '商品1', '商品3', '商品7'],
+                ['商品1', '商品3', '商品7'],
+                ['商品4', '商品5', '商品2', '商品3', '商品1'],
+                ['商品2', '商品6']]
 
     def showData(self):
         self.data = self.dataCreate()
         print(self.data)
+        formatted_text = ''
+        for i, sublist in enumerate(self.data, start=1):
+            formatted_text += f"事务{i}：{{{', '.join(sublist)}}}\n"
+        self.source_data.setText(formatted_text)
         # img_path = 'result/fp.png'
         # plt.scatter(self.data[:, 0], self.data[:, 1],c=self.label, cmap='cool')
         # plt.savefig(img_path)

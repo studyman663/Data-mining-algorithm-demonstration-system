@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, QTabWidget, QMessageBox
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QFont
 from PyQt6.QtCore import Qt
 from matplotlib import pyplot as plt
 from sklearn.datasets import make_blobs, make_moons, make_circles
@@ -18,14 +18,14 @@ class ClusterWindow(QWidget):
         self.setLayout(vbox)
 
     def init_UI(self):
-        self.data=None
+        self.data='数据集'
         self.label=None
-        self.mode = '模式数据'
+        self.mode = '内置数据集'
         self.type = '散点图'
         self.num = 300
         self.center = 4
         self.noise = 0
-        mode = ['数据集生成方法', "模式数据", "随机数据"]
+        mode = ['数据集生成方法', "内置数据集", "自定义数据集"]
         type = ['数据集种类', "散点图", "漩涡图", "环状图"]
         num = ['样本总数', '100', '500', '1000']
         center = ['样本类别数', '1', '2', '3', '4', '5']
@@ -43,10 +43,10 @@ class ClusterWindow(QWidget):
         show_button = QPushButton('生成数据')
 
         tab_widget = QTabWidget()
-        self.source_data = QLabel()
+        self.source_data = QLabel(self.data)
         self.source_data.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("myplot.png")  # 替换为你的图片路径
-        self.source_data.setPixmap(self.pixmap)
+        self.font = QFont("Arial", 40)
+        self.source_data.setFont(self.font)
         self.kmeans = ClusterTabWidget()
         self.kmedoid = ClusterTabWidget()
         self.agnes = ClusterTabWidget()
@@ -138,15 +138,15 @@ class ClusterWindow(QWidget):
 
     def dataCreate(self):
         data, label = None, None
-        if self.mode == '模式数据':
+        if self.mode == '自定义数据集':
             if self.type == '散点图':
-                data, label = make_blobs(n_samples=self.num, centers=self.center, random_state=42)
+                data, label = make_blobs(n_samples=self.num, centers=self.center, random_state=None)
             elif self.type == '漩涡图':
-                data, label = make_moons(n_samples=self.num, noise=self.noise, random_state=42)
+                data, label = make_moons(n_samples=self.num, noise=self.noise, random_state=None)
             else:
-                data, label = make_circles(n_samples=self.num, noise=self.noise, random_state=42)
+                data, label = make_circles(n_samples=self.num, noise=self.noise, random_state=None)
         else:
-            pass
+            data, label = make_blobs(n_samples=300, centers=4, random_state=42)
         return data, label
 
     def showData(self):

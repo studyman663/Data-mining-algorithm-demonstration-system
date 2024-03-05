@@ -3,7 +3,7 @@ import sys
 import numpy as np
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, \
     QTabWidget, QMessageBox
-from PyQt6.QtGui import QIcon, QPixmap, QFont
+from PyQt6.QtGui import QIcon, QPixmap, QFont, QPalette, QBrush, QColor
 from PyQt6.QtCore import Qt
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -18,26 +18,36 @@ from clusterModel import myKmeans, myKmedoid, myAgnes, myDbscan, myDiana
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+        # font = QFont("Serif", 60)
+        # font.setBold(True)
+        # self.setFont(font)
+        # self.setStyleSheet("color: white;")
         self.setWindowTitle('数据挖掘算法演示系统')
         self.setGeometry(400, 100, 800, 700)
         self.title_label = QLabel(self)
-        self.fp_button = QPushButton('频繁模式挖掘')
-        self.classify_button = QPushButton('分类')
-        self.cluster_button = QPushButton('聚类')
+        background_img = QPixmap("source/background.png")
+        background_brush = QBrush(background_img)
+        palette = QPalette()
+        palette.setBrush(self.backgroundRole(), background_brush)
+        self.setPalette(palette)
         vbox = self.init_UI()
         self.setLayout(vbox)
         self.show()  # 显示窗口
 
     def init_UI(self):
-        font_title = QFont()
-        font_title.setPointSize(25)
-        font_button = QFont()
-        font_button.setPointSize(15)
+        self.fp_button = QPushButton('频繁模式挖掘')
+        self.classify_button = QPushButton('分类')
+        self.cluster_button = QPushButton('聚类')
+        font_title = QFont("Serif", 40)
+        font_title.setBold(True)
+        font_button = QFont("Serif", 25)
+        font_button.setBold(True)
         self.fp_button.clicked.connect(self.show_fp_window)
         self.classify_button.clicked.connect(self.show_classify_window)
         self.cluster_button.clicked.connect(self.show_cluster_window)
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_label.setText('数据挖掘算法演示系统')
+        self.title_label.setStyleSheet("color: white;")
         self.title_label.setFont(font_title)
         self.fp_button.setFont(font_button)
         self.classify_button.setFont(font_button)

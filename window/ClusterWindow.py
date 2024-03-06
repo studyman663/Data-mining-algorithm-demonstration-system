@@ -150,7 +150,7 @@ class ClusterWindow(QWidget):
 
     def showData(self):
         self.data, self.label = self.dataCreate()
-        img_path = '../result/cluster.png'
+        img_path = 'result/cluster.png'
         plt.scatter(self.data[:, 0], self.data[:, 1])
         plt.savefig(img_path)
         plt.close()
@@ -205,7 +205,7 @@ class ClusterTabWidget(QWidget):
         self.radius=1
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("../source/cluster_background.png")  # 替换为你的图片路径
+        self.pixmap = QPixmap("source/cluster_background.png")  # 替换为你的图片路径
         self.image_label.setPixmap(self.pixmap)
         radius = ['领域半径', '0.1', '0.2', '0.3', '0.4', '0.5','1']
         self.radius_combbox = QComboBox()

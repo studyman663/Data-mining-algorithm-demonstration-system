@@ -152,7 +152,7 @@ class FPTabWidget(QWidget):
         self.minSup = 0.5
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("../source/fp_background.png")  # 替换为你的图片路径
+        self.pixmap = QPixmap("source/fp_background.png")  # 替换为你的图片路径
         self.image_label.setPixmap(self.pixmap)
         minSup = ['最小支持度', '0.1', '0.2', '0.3', '0.4', '0.5']
         self.minSup_combbox = QComboBox()

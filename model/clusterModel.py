@@ -1,7 +1,5 @@
 import numpy as np
 from matplotlib import pyplot as plt, cm
-from matplotlib.cm import viridis
-from sklearn.datasets import make_blobs, make_moons
 from scipy.spatial.distance import pdist, squareform
 plt.rcParams['font.sans-serif'] = ['SimHei']
 class myKmeans:
@@ -40,7 +38,7 @@ class myKmeans:
                 ClustI = data[np.nonzero(sampleTag == j)[0]]
                 clusterCents[j, :] = np.mean(ClustI, axis=0)
             # 可视化聚类结果
-            img_path = '../result/kmeans.png'
+            img_path = 'result/kmeans.png'
             plt.scatter(data[:, 0], data[:, 1], c=sampleTag)
             plt.scatter(clusterCents[:, 0], clusterCents[:, 1], c='r', marker='^', linewidths=7)
             plt.savefig(img_path)
@@ -94,7 +92,7 @@ class myKmedoid():
                 num_center += np.min(distances[i]) ** 2
 
         # 可视化聚类结果
-        img_path = '../result/kmedoid.png'
+        img_path = 'result/kmedoid.png'
         plt.scatter(data[:, 0], data[:, 1], c=sampleTag)
         plt.scatter(clusterCents[:, 0], clusterCents[:, 1], c='r', marker='^', linewidths=7)
         plt.savefig(img_path)
@@ -134,7 +132,7 @@ class myAgnes():
                         linkage_mat[cj[0]][ci[0]] = new_dist
 
         # 可视化聚类结果
-        img_path= '../result/agnes.png'
+        img_path= 'result/agnes.png'
         cluster_centers = np.array([np.mean(data[cluster], axis=0) for cluster in clusters])
         colors = cm.rainbow(np.linspace(0, 1, len(clusters)))  # 使用彩虹色映射获取不同颜色值
         for i, cluster in enumerate(clusters):
@@ -142,7 +140,6 @@ class myAgnes():
         plt.scatter(cluster_centers[:, 0], cluster_centers[:, 1], c='r', marker='^', linewidths=7)
         plt.savefig(img_path)
         plt.close()
-        print('tttt')
         # 返回最终的簇划分
         return img_path
 
@@ -179,7 +176,7 @@ class myDiana():
                         linkage_mat[cj[0]][ci[0]] = new_dist
 
         # 可视化聚类结果
-        img_path= '../result/diana.png'
+        img_path= 'result/diana.png'
         cluster_centers = np.array([np.mean(data[cluster], axis=0) for cluster in clusters])
         colors = cm.viridis(np.linspace(0, 1, len(clusters)))  # 使用彩虹色映射获取不同颜色值
         for i, cluster in enumerate(clusters):
@@ -250,7 +247,7 @@ class myDbscan():
 
             cluster_center = np.mean(cluster_points, axis=0)
             plt.scatter(cluster_center[0], cluster_center[1], marker='^', color='r', linewidths=7)
-        img_path= '../result/dbscan.png'
+        img_path= 'result/dbscan.png'
         plt.savefig(img_path)
         plt.close()
         return img_path

@@ -48,7 +48,7 @@ class myApriori:
         ax.set_title('频繁项集')
 
         plt.tight_layout()  # 调整图形布局，避免标签被遮挡
-        img_path= '../result/apriori.png'
+        img_path= 'result/apriori.png'
         plt.savefig(img_path)
         plt.close()
         return img_path
@@ -174,7 +174,7 @@ class myFPgrowth():
         ax.set_title('频繁项集')
 
         plt.tight_layout()  # 调整图形布局，避免标签被遮挡
-        img_path= '../result/fpgrowth.png'
+        img_path= 'result/fpgrowth.png'
         plt.savefig(img_path)
         plt.close()
         return img_path

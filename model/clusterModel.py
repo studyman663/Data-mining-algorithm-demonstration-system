@@ -40,7 +40,7 @@ class myKmeans:
                 ClustI = data[np.nonzero(sampleTag == j)[0]]
                 clusterCents[j, :] = np.mean(ClustI, axis=0)
             # 可视化聚类结果
-            img_path = 'result/kmeans.png'
+            img_path = '../result/kmeans.png'
             plt.scatter(data[:, 0], data[:, 1], c=sampleTag)
             plt.scatter(clusterCents[:, 0], clusterCents[:, 1], c='r', marker='^', linewidths=7)
             plt.savefig(img_path)
@@ -94,7 +94,7 @@ class myKmedoid():
                 num_center += np.min(distances[i]) ** 2
 
         # 可视化聚类结果
-        img_path = 'result/kmedoid.png'
+        img_path = '../result/kmedoid.png'
         plt.scatter(data[:, 0], data[:, 1], c=sampleTag)
         plt.scatter(clusterCents[:, 0], clusterCents[:, 1], c='r', marker='^', linewidths=7)
         plt.savefig(img_path)
@@ -134,7 +134,7 @@ class myAgnes():
                         linkage_mat[cj[0]][ci[0]] = new_dist
 
         # 可视化聚类结果
-        img_path='result/agnes.png'
+        img_path= '../result/agnes.png'
         cluster_centers = np.array([np.mean(data[cluster], axis=0) for cluster in clusters])
         colors = cm.rainbow(np.linspace(0, 1, len(clusters)))  # 使用彩虹色映射获取不同颜色值
         for i, cluster in enumerate(clusters):
@@ -179,7 +179,7 @@ class myDiana():
                         linkage_mat[cj[0]][ci[0]] = new_dist
 
         # 可视化聚类结果
-        img_path='result/diana.png'
+        img_path= '../result/diana.png'
         cluster_centers = np.array([np.mean(data[cluster], axis=0) for cluster in clusters])
         colors = cm.viridis(np.linspace(0, 1, len(clusters)))  # 使用彩虹色映射获取不同颜色值
         for i, cluster in enumerate(clusters):
@@ -250,7 +250,7 @@ class myDbscan():
 
             cluster_center = np.mean(cluster_points, axis=0)
             plt.scatter(cluster_center[0], cluster_center[1], marker='^', color='r', linewidths=7)
-        img_path='result/dbscan.png'
+        img_path= '../result/dbscan.png'
         plt.savefig(img_path)
         plt.close()
         return img_path

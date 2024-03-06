@@ -5,10 +5,9 @@ from matplotlib import pyplot as plt
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 
-from classifyModel import myDecisionTree, myBayes
+from model.classifyModel import myDecisionTree, myBayes
 
 plt.rcParams['font.sans-serif'] = ['SimHei']
-
 
 class ClassifyWindow(QWidget):
     def __init__(self, main_window):
@@ -158,7 +157,7 @@ class ClassifyWindow(QWidget):
         self.data_train, self.data_test, self.label_train, self.label_test = train_test_split(self.data, self.label,
                                                                                               test_size=1 / 2,
                                                                                               random_state=42)
-        img_path = 'result/classify.png'
+        img_path = '../result/classify.png'
         plt.scatter(self.data[:, 0], self.data[:, 1], c=self.label, cmap='cool')
         plt.savefig(img_path)
         plt.close()
@@ -174,7 +173,7 @@ class ClassifyWindow(QWidget):
         plt.scatter(self.data_test[:, 0], self.data_test[:, 1], c=pred, cmap='bwr')
         plt.xlabel('特征1')
         plt.ylabel('特征2')
-        img_path = 'result/decision_tree.png'
+        img_path = '../result/decision_tree.png'
         plt.savefig(img_path)
         plt.close()
         pixmap = QPixmap(img_path)
@@ -187,7 +186,7 @@ class ClassifyWindow(QWidget):
         plt.scatter(self.data_test[:, 0], self.data_test[:, 1], c=pred, cmap='bwr')
         plt.xlabel('特征1')
         plt.ylabel('特征2')
-        img_path = 'result/bayes.png'
+        img_path = '../result/bayes.png'
         plt.savefig(img_path)
         plt.close()
         pixmap = QPixmap(img_path)
@@ -203,7 +202,7 @@ class ClassifyTabWidget(QWidget):
         self.depth = 5
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("myplot.png")  # 替换为你的图片路径
+        self.pixmap = QPixmap("../source/classify_background.png")  # 替换为你的图片路径
         self.image_label.setPixmap(self.pixmap)
         depth = ['最大深度', '1', '2', '3', '4', '5']
         self.depth_combbox = QComboBox()

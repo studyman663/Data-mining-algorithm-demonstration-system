@@ -1,27 +1,15 @@
 import sys
-
-import numpy as np
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, \
-    QTabWidget, QMessageBox
-from PyQt6.QtGui import QIcon, QPixmap, QFont, QPalette, QBrush, QColor
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout
+from PyQt6.QtGui import QPixmap, QFont, QPalette, QBrush
 from PyQt6.QtCore import Qt
-from matplotlib import pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from sklearn.datasets import make_moons, make_blobs, make_circles
 
-from ClassifyWindow import ClassifyWindow
-from ClusterWindow import ClusterWindow
-from FPWindow import FPWindow
-from clusterModel import myKmeans, myKmedoid, myAgnes, myDbscan, myDiana
-
+from window.ClassifyWindow import ClassifyWindow
+from window.ClusterWindow import ClusterWindow
+from window.FPWindow import FPWindow
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        # font = QFont("Serif", 60)
-        # font.setBold(True)
-        # self.setFont(font)
-        # self.setStyleSheet("color: white;")
         self.setWindowTitle('数据挖掘算法演示系统')
         self.setGeometry(400, 100, 800, 700)
         self.title_label = QLabel(self)

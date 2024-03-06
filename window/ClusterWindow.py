@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt
 from matplotlib import pyplot as plt
 from sklearn.datasets import make_blobs, make_moons, make_circles
 
-from clusterModel import myKmeans, myKmedoid, myDiana, myAgnes, myDbscan
+from model.clusterModel import myKmeans, myKmedoid, myDiana, myAgnes, myDbscan
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus']=False
 
@@ -92,7 +92,6 @@ class ClusterWindow(QWidget):
 
         # 使用垂直布局管理器布局上面3个水平布局管理器
         vbox = QVBoxLayout()
-
         vbox.addSpacing(10)
         vbox.addLayout(hbox_func)
         vbox.addLayout(hbox_tab)
@@ -151,7 +150,7 @@ class ClusterWindow(QWidget):
 
     def showData(self):
         self.data, self.label = self.dataCreate()
-        img_path = 'result/cluster.png'
+        img_path = '../result/cluster.png'
         plt.scatter(self.data[:, 0], self.data[:, 1])
         plt.savefig(img_path)
         plt.close()
@@ -182,7 +181,6 @@ class ClusterWindow(QWidget):
         self.diana.image_label.setPixmap(pixmap)
 
     def runAgnes(self):
-        print(self.data,self.agnes.center)
         model = myAgnes()
         img_path = model.Run(self.data, 4)
         pixmap = QPixmap(img_path)
@@ -207,12 +205,12 @@ class ClusterTabWidget(QWidget):
         self.radius=1
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("myplot.png")  # 替换为你的图片路径
+        self.pixmap = QPixmap("../source/cluster_background.png")  # 替换为你的图片路径
         self.image_label.setPixmap(self.pixmap)
-        radius = ['领域半径', '0.1', '0.5', '1', '2', '5']
+        radius = ['领域半径', '0.1', '0.2', '0.3', '0.4', '0.5','1']
         self.radius_combbox = QComboBox()
         self.radius_combbox.addItems(radius)
-        min = ['最小样本数', '1', '2', '3', '4', '5']
+        min = ['最小样本数', '1', '2', '3', '4', '5','6','7']
         self.min_combbox = QComboBox()
         self.min_combbox.addItems(min)
         center = ['样本类别数', '1', '2', '3', '4', '5']

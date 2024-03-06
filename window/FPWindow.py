@@ -4,10 +4,8 @@ from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayo
     QTextEdit
 from PyQt6.QtGui import QPixmap, QFont
 from PyQt6.QtCore import Qt
-from matplotlib import pyplot as plt
-from sklearn.datasets import make_classification
 
-from fpModel import myApriori, myFPgrowth
+from model.fpModel import myApriori, myFPgrowth
 
 
 class FPWindow(QWidget):
@@ -38,11 +36,10 @@ class FPWindow(QWidget):
         tab_widget = QTabWidget()
         self.source_data = QTextEdit(self.data)
         self.source_data.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.font = QFont("Arial", 30)
+        self.font = QFont("Arial", 20)
         self.source_data.setFont(self.font)
         self.apriori = FPTabWidget()
         self.fpgrowth = FPTabWidget()
-        # self.bayes.depth_combbox.setVisible(False)
         self.apriori.run_button.clicked.connect(self.runApriori)
         self.fpgrowth.run_button.clicked.connect(self.runFPgrowth)
 
@@ -128,18 +125,10 @@ class FPWindow(QWidget):
 
     def showData(self):
         self.data = self.dataCreate()
-        print(self.data)
         formatted_text = ''
         for i, sublist in enumerate(self.data, start=1):
             formatted_text += f"事务{i}：{{{', '.join(sublist)}}}\n"
         self.source_data.setText(formatted_text)
-        # img_path = 'result/fp.png'
-        # plt.scatter(self.data[:, 0], self.data[:, 1],c=self.label, cmap='cool')
-        # plt.savefig(img_path)
-        # pixmap = QPixmap(img_path)
-        # self.source_data.setPixmap(pixmap)
-        # self.decision_tree.image_label.setPixmap(pixmap)
-        # self.bayes.image_label.setPixmap(pixmap)
 
     def runApriori(self):
         model = myApriori(self.data, self.apriori.minSup * len(self.data))
@@ -163,7 +152,7 @@ class FPTabWidget(QWidget):
         self.minSup = 0.5
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.pixmap = QPixmap("myplot.png")  # 替换为你的图片路径
+        self.pixmap = QPixmap("../source/fp_background.png")  # 替换为你的图片路径
         self.image_label.setPixmap(self.pixmap)
         minSup = ['最小支持度', '0.1', '0.2', '0.3', '0.4', '0.5']
         self.minSup_combbox = QComboBox()

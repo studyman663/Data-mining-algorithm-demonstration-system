@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 from sklearn.datasets import make_blobs, make_moons, make_circles
 
 from model.clusterModel import myKmeans, myKmedoid, myDiana, myAgnes, myDbscan
+from window.CodeWindow import CodeWindow
+
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus']=False
 
@@ -200,6 +202,7 @@ class ClusterWindow(QWidget):
 class ClusterTabWidget(QWidget):
     def __init__(self):
         super().__init__()
+        self.code='hello'
         self.center = 2
         self.min=5
         self.radius=1
@@ -223,6 +226,8 @@ class ClusterTabWidget(QWidget):
         self.run_button = QPushButton('运行')
         self.result_label = QLabel()
         self.result_label.setText('性能分析')
+        self.code_button = QPushButton('查看代码')
+        self.code_button.clicked.connect(lambda: (self.showCode(self.code)))
 
         hbox1 = QHBoxLayout()
 
@@ -236,6 +241,8 @@ class ClusterTabWidget(QWidget):
 
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.result_label)
+        hbox2.addStretch(1)
+        hbox2.addWidget(self.code_button)
 
         vbox = QVBoxLayout()
 
@@ -264,3 +271,7 @@ class ClusterTabWidget(QWidget):
             QMessageBox.information(self, '提醒', '请选择领域半径')
         else:
             self.radius = float(radius)
+
+    def showCode(self, code):
+        self.code_window = CodeWindow(code)
+        self.code_window.show()

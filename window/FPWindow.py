@@ -6,6 +6,7 @@ from PyQt6.QtGui import QPixmap, QFont
 from PyQt6.QtCore import Qt
 
 from model.fpModel import myApriori, myFPgrowth
+from window.CodeWindow import CodeWindow
 
 
 class FPWindow(QWidget):
@@ -42,6 +43,8 @@ class FPWindow(QWidget):
         self.fpgrowth = FPTabWidget()
         self.apriori.run_button.clicked.connect(self.runApriori)
         self.fpgrowth.run_button.clicked.connect(self.runFPgrowth)
+        # self.apriori.code=self.getCode('./model/fpModel.py',104,127)
+        # self.fpgrowth.code = self.getCode('../model/fpModel.py', 188, 271)
 
         tab_widget.addTab(self.source_data, '原始数据')
         tab_widget.addTab(self.apriori, 'Apriori')
@@ -142,6 +145,22 @@ class FPWindow(QWidget):
         pixmap = QPixmap(img_path)
         self.fpgrowth.image_label.setPixmap(pixmap)
 
+    # def getCode(self,filename, start_line, end_line):
+    #     print('t')
+    #     with open(filename, 'r') as file:
+    #         # 读取所有行到列表中
+    #         lines = file.readlines()
+    #         print(lines)
+    #         # 确保行号在有效范围内
+    #         if start_line < 1 or end_line > len(lines) or start_line > end_line:
+    #             raise ValueError("Invalid line numbers")
+    #         # 切片获取指定的行范围（包括起始行和结束行）
+    #         specific_lines = lines[start_line - 1:end_line]
+    #         # 拼接这些行为一个字符串，保留换行符以保持格式
+    #         code_as_string = ''.join(specific_lines)
+    #         print(code_as_string)
+    #     return code_as_string
+
     def closeEvent(self, evt):
         self.main_window.show()
 
@@ -149,6 +168,8 @@ class FPWindow(QWidget):
 class FPTabWidget(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.code= 'hello'
         self.minSup = 0.5
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -162,6 +183,9 @@ class FPTabWidget(QWidget):
         self.run_button = QPushButton('运行')
         self.result_label = QLabel()
         self.result_label.setText('性能分析')
+        self.code_button=QPushButton('查看代码')
+        self.code_button.clicked.connect(lambda: (self.showCode(self.code)))
+
 
         hbox1 = QHBoxLayout()
 
@@ -173,6 +197,8 @@ class FPTabWidget(QWidget):
 
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.result_label)
+        hbox2.addStretch(1)
+        hbox2.addWidget(self.code_button)
 
         vbox = QVBoxLayout()
 
@@ -189,3 +215,7 @@ class FPTabWidget(QWidget):
             QMessageBox.information(self, '提醒', '请选择最小支持度')
         else:
             self.minSup = float(minSup)
+
+    def showCode(self,code):
+        self.code_window=CodeWindow(code)
+        self.code_window.show()

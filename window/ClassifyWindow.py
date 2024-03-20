@@ -6,6 +6,7 @@ from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 
 from model.classifyModel import myDecisionTree, myBayes
+from window.CodeWindow import CodeWindow
 
 plt.rcParams['font.sans-serif'] = ['SimHei']
 
@@ -130,7 +131,7 @@ class ClassifyWindow(QWidget):
                                               n_repeated=0,
                                               n_classes=self.classes,
                                               random_state=None,
-                                              n_clusters_per_class=2,
+                                              n_clusters_per_class=1,
                                               shuffle=True,
                                               class_sep=1,
                                               shift=10,
@@ -144,7 +145,7 @@ class ClassifyWindow(QWidget):
                                               n_repeated=0,
                                               n_classes=2,
                                               random_state=42,
-                                              n_clusters_per_class=2,
+                                              n_clusters_per_class=1,
                                               shuffle=True,
                                               class_sep=1,
                                               shift=10,
@@ -154,6 +155,7 @@ class ClassifyWindow(QWidget):
 
     def showData(self):
         self.data, self.label = self.dataCreate()
+        # print(self.label)
         self.data_train, self.data_test, self.label_train, self.label_test = train_test_split(self.data, self.label,
                                                                                               test_size=1 / 2,
                                                                                               random_state=42)
@@ -199,6 +201,7 @@ class ClassifyWindow(QWidget):
 class ClassifyTabWidget(QWidget):
     def __init__(self):
         super().__init__()
+        self.code='hello'
         self.depth = 5
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -212,6 +215,8 @@ class ClassifyTabWidget(QWidget):
         self.run_button = QPushButton('运行')
         self.result_label = QLabel()
         self.result_label.setText('性能分析')
+        self.code_button = QPushButton('查看代码')
+        self.code_button.clicked.connect(lambda: (self.showCode(self.code)))
 
         hbox1 = QHBoxLayout()
 
@@ -223,6 +228,8 @@ class ClassifyTabWidget(QWidget):
 
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.result_label)
+        hbox2.addStretch(1)
+        hbox2.addWidget(self.code_button)
 
         vbox = QVBoxLayout()
 
@@ -239,3 +246,7 @@ class ClassifyTabWidget(QWidget):
             QMessageBox.information(self, '提醒', '请选择最大深度')
         else:
             self.depth = int(depth)
+
+    def showCode(self, code):
+        self.code_window = CodeWindow(code)
+        self.code_window.show()
